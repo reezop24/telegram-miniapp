@@ -19,7 +19,7 @@ const videos = [
   {
     id: "basic_001",
     title: "APA ITU TRADING",
-    desc: "Bezakan trading investing dan speculation, Apa yang sebenarnya trader buat , Mitos dan salah faham",
+    desc: "Bezakan trading,investing dan speculation\nApa yang sebenarnya trader buat\nMitos dan salah faham",
     level: "basic",
   },
   {
