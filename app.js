@@ -25,7 +25,7 @@ const videos = [
   {
     id: "basic_002",
     title: "BAGAIMANA HARGA BERGERAK",
-    desc: "Siapa pemain pasaran\nSiapa yang menggerakkan harga\nKonsep pergerakan harga , Apa itu liquidity",
+    desc: "Siapa pemain pasaran\nSiapa yang menggerakkan harga\nKonsep pergerakan harga\nApa itu liquidity",
     level: "basic",
   },
    {
