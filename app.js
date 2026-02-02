@@ -1,11 +1,8 @@
 const tg = window.Telegram.WebApp;
 tg.ready();
-// ====== GET LEVEL FROM BOT ======
-const params = new URLSearchParams(window.location.search);
-const CURRENT_LEVEL = params.get("level"); 
-// basic | medium | advance
 
-console.log("Current Level:", CURRENT_LEVEL);
+const params = new URLSearchParams(window.location.search);
+const CURRENT_LEVEL = params.get("level"); // basic | medium | advance
 
 
 const videos = [
@@ -41,41 +38,43 @@ const videos = [
   },
 ];
 
-const tabs = document.querySelectorAll(".tab");
-const list = document.getElementById("videoList");
+const videoList = document.getElementById("videoList");
 
-function render(level) {
-  list.innerHTML = "";
-  videos
-    .filter(v => v.level === level)
-    .forEach(v => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <h3>${v.title}</h3>
-        <p>${v.desc}</p>
-        <button class="open-btn">BUKA</button>
-      `;
+function renderVideos() {
+  videoList.innerHTML = "";
 
-      card.querySelector(".open-btn").onclick = () => {
-        tg.sendData(JSON.stringify({
-          action: "open_video",
-          video_id: v.id,
-          level: v.level
-        }));
-        tg.close();
-      };
+  const filteredVideos = CURRENT_LEVEL
+    ? videos.filter(v => v.level === CURRENT_LEVEL)
+    : videos;
 
-      list.appendChild(card);
-    });
+  if (filteredVideos.length === 0) {
+    videoList.innerHTML = "<p>Tiada video untuk level ini.</p>";
+    return;
+  }
+
+  filteredVideos.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <h3>${video.title}</h3>
+      <p>${video.desc}</p>
+      <button class="open-btn" onclick="openVideo('${video.id}')">
+        Buka
+      </button>
+    `;
+
+    videoList.appendChild(card);
+  });
 }
 
-tabs.forEach(tab => {
-  tab.onclick = () => {
-    tabs.forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-    render(tab.dataset.level);
-  };
-});
+function openVideo(videoId) {
+  tg.sendData(JSON.stringify({
+    video_id: videoId,
+    level: CURRENT_LEVEL
+  }));
+}
 
-render("basic");
+renderVideos();
+
+
