@@ -18,8 +18,8 @@ if (CURRENT_LEVEL) {
 const videos = [
   {
     id: "basic_001",
-    title: "Market Structure Asas",
-    desc: "Pengenalan trend, HH HL LL LH",
+    title: "APA ITU TRADING",
+    desc: "Bezakan trading investing dan speculation, Apa yang sebenarnya trader buat , Mitos dan salah faham",
     level: "basic",
   },
   {
