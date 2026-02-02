@@ -14,6 +14,12 @@ const videos = [
     desc: "Asas SNR yang betul",
     level: "basic",
   },
+   {
+    id: "basic_003",
+    title: "Support & Resistance",
+    desc: "Asas SNR yang betul",
+    level: "basic",
+  },
   {
     id: "medium_001",
     title: "Break & Retest",
