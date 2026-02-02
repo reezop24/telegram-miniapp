@@ -1,5 +1,12 @@
 const tg = window.Telegram.WebApp;
 tg.ready();
+// ====== GET LEVEL FROM BOT ======
+const params = new URLSearchParams(window.location.search);
+const CURRENT_LEVEL = params.get("level"); 
+// basic | medium | advance
+
+console.log("Current Level:", CURRENT_LEVEL);
+
 
 const videos = [
   {
