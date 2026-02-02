@@ -24,8 +24,8 @@ const videos = [
   },
   {
     id: "basic_002",
-    title: "Support & Resistance",
-    desc: "Asas SNR yang betul",
+    title: "BAGAIMANA HARGA BERGERAK",
+    desc: "Siapa pemain pasaran\nSiapa yang menggerakkan harga\nKonsep pergerakan harga , Apa itu liquidity",
     level: "basic",
   },
    {
