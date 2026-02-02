@@ -3,6 +3,16 @@ tg.ready();
 
 const params = new URLSearchParams(window.location.search);
 const CURRENT_LEVEL = params.get("level"); // basic | medium | advance
+const pageTitle = document.getElementById("pageTitle");
+
+if (CURRENT_LEVEL) {
+  pageTitle.innerText =
+    CURRENT_LEVEL.charAt(0).toUpperCase() + CURRENT_LEVEL.slice(1);
+}
+if (CURRENT_LEVEL) {
+  const tabs = document.querySelector(".tabs");
+  if (tabs) tabs.style.display = "none";
+}
 
 
 const videos = [
