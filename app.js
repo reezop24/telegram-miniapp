@@ -122,7 +122,7 @@ const videos = [
     id: "advance_002",
     title: "LIQUIDITY - Level 3",
     desc: "Session liquidity map\nExternal vs internal liquidity target\nPartial liquidity grab vs full sweep\nLiquidity run & exhaustion",
-    level: "advance",
+    level: "advanced",
   },
 ];
 
