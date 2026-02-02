@@ -98,19 +98,19 @@ const videos = [
     id: "medium_001",
     title: "MARKET STRUCTURE - Level 2",
     desc: "Internal vs external structure\nComplex pullback\nTrend correction & Trend change\nMicro consolidation\nMulti BOS",
-    level: "Intermediate",
+    level: "intermediate",
   },
   {
     id: "medium_002",
     title: "LIQUIDITY - Level 2",
     desc: "Jenis liquidity\nKumpulan liquidity\nBagaimana liquidity dicipta oleh pergerakan harga\nLiquidity tujuan entry vs liquidity tujuan target",
-    level: "Intermediate",
+    level: "intermediate",
   },
   {
     id: "medium_003",
     title: "SUPPLY & DEMAND",
     desc: "Perbezaan SnR dan SnD\nFresh & test zone\nWeak vs Strong SnD\nKesilapan biasa marking SnD\nHubungan SnD dengan liquidity",
-    level: "Intermediate",
+    level: "intermediate",
   },
   {
     id: "advance_001",
