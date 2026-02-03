@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>XAUUSD Risk Calculator</title>
+  <title>XAUUSD Lot Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Telegram WebApp -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0f172a;
       color: #e5e7eb;
       margin: 0;
@@ -19,19 +17,22 @@
 
     h1 {
       font-size: 20px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .subtitle {
       font-size: 13px;
       color: #9ca3af;
       margin-bottom: 16px;
+      line-height: 1.5;
     }
 
     .card {
       background: #020617;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid #1e293b;
     }
 
     label {
@@ -39,28 +40,33 @@
       font-size: 13px;
       margin-top: 14px;
       margin-bottom: 6px;
+      font-weight: 600;
     }
 
     input {
       width: 100%;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
       outline: none;
       font-size: 14px;
+      background: #020617;
+      color: #fff;
+      border: 1px solid #334155;
     }
 
     .info {
       font-size: 12px;
       color: #9ca3af;
       margin-top: 4px;
+      line-height: 1.4;
     }
 
     button {
       width: 100%;
       margin-top: 20px;
       padding: 14px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: none;
       background: #dc2626;
       color: white;
@@ -72,65 +78,82 @@
     .result {
       margin-top: 20px;
       background: #020617;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 16px;
+      border-radius: 12px;
       display: none;
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.6;
+      border: 1px solid #334155;
     }
 
     .note {
       font-size: 12px;
       color: #9ca3af;
-      margin-top: 12px;
+      margin-top: 14px;
+      line-height: 1.4;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>🧮 XAUUSD Risk Calculator</h1>
-  <div class="subtitle">
-    Kira saiz lot selamat berdasarkan baki, risiko dan zon setup anda.
+<h1>🧮 XAUUSD Lot Calculator</h1>
+<div class="subtitle">
+Kalkulator ini membantu anda menentukan <b>saiz lot paling selamat</b>
+berdasarkan baki akaun, risiko (%) dan saiz zon setup.<br><br>
+📌 Direka khas untuk <b>XAUUSD (Gold)</b> sahaja.
+</div>
+
+<div class="card">
+
+  <label>Baki Akaun Trading ($)</label>
+  <input id="balance" type="number" placeholder="Contoh: 1000" />
+  <div class="info">
+    Masukkan baki sebenar dalam akaun trading anda.<br>
+    Contoh: $1,000 / $5,000 / $10,000
   </div>
 
-  <div class="card">
-    <div class="info">
-      Semua kiraan menggunakan pip.<br>
-      0.01 = 1 pip • 4500 → 4501 = 10 pips
-    </div>
-
-    <label>Account Balance ($)</label>
-    <input id="balance" type="number" placeholder="Contoh: 1000" />
-
-    <label>Risk Percentage (%)</label>
-    <input id="risk" type="number" step="0.01" placeholder="Contoh: 2" />
-    <div class="info">Kebiasaannya 1% – 3%</div>
-
-    <label>Stop Loss / Zone Size (Pips)</label>
-    <input id="zone" type="number" placeholder="Contoh: 30" />
-    <div class="info">Jarak entry ke stop loss berdasarkan zon setup</div>
-
-    <label>Current Spread (Pips)</label>
-    <input id="spread" type="number" placeholder="Contoh: 2" />
-    <div class="info">Rujuk MT5 (20 points = 2 pips)</div>
-
-    <button onclick="calculate()">🔍 Kira Lot Size</button>
-
-    <div id="result" class="result"></div>
-
-    <div class="note">
-      Lot dibundarkan ke nilai lebih kecil bagi memastikan risiko sebenar
-      tidak melebihi perancangan asal.
-    </div>
+  <label>Risk Percentage (%)</label>
+  <input id="risk" type="number" step="0.01" placeholder="Contoh: 1 atau 2" />
+  <div class="info">
+    Peratus risiko untuk <b>1 trade sahaja</b>.<br>
+    Kebiasaan: 1% – 3%
   </div>
+
+  <label>Saiz Zon / Stop Loss (Pips)</label>
+  <input id="zone" type="number" placeholder="Contoh: 30" />
+  <div class="info">
+    Jarak dari entry ke stop loss berdasarkan zon setup anda.<br>
+    Contoh: 4500 → 4503 = 30 pips
+  </div>
+
+  <label>Spread Semasa (Pips)</label>
+  <input id="spread" type="number" placeholder="Contoh: 2" />
+  <div class="info">
+    Spread semasa di MT5.<br>
+    📌 20 points = 2 pips
+  </div>
+
+  <button onclick="calculate()">🔍 Kira Lot Size</button>
+
+  <div id="result" class="result"></div>
+
+  <div class="note">
+    🔒 <b>Nota Risiko:</b><br>
+    Lot akan dibundarkan ke nilai <b>lebih kecil</b> bagi memastikan
+    risiko sebenar tidak melebihi perancangan asal.<br><br>
+    Ini membantu mengelakkan over-risk walaupun berlaku
+    kesilapan kiraan atau spread melebar.
+  </div>
+
+</div>
 
 <script>
 function calculate() {
-  const balance = parseFloat(balanceEl.value);
-  const riskPct = parseFloat(riskEl.value);
-  const zone = parseFloat(zoneEl.value);
-  const spread = parseFloat(spreadEl.value);
+  const balance = parseFloat(document.getElementById("balance").value);
+  const riskPct = parseFloat(document.getElementById("risk").value);
+  const zone = parseFloat(document.getElementById("zone").value);
+  const spread = parseFloat(document.getElementById("spread").value);
 
   const resultBox = document.getElementById("result");
 
@@ -149,30 +172,34 @@ function calculate() {
   if (finalLot <= 0) {
     resultBox.style.display = "block";
     resultBox.innerHTML = `
-      ⚠️ <b>Lot Tidak Mencukupi</b><br><br>
-      Berdasarkan baki, risiko dan saiz zon yang anda tetapkan,
-      lot yang selamat untuk setup ini adalah
-      lebih kecil daripada minimum lot yang dibenarkan.<br><br>
+      ⚠️ <b>Risiko Terlalu Kecil</b><br><br>
+      Berdasarkan tetapan anda, saiz lot yang selamat
+      adalah terlalu kecil untuk dibuka.<br><br>
       <b>Cadangan:</b><br>
       • Kecilkan saiz zon<br>
-      • ATAU tingkatkan risiko %<br>
-      • ATAU gunakan baki yang lebih besar
+      • ATAU tingkatkan risk % sedikit<br>
+      • ATAU gunakan baki lebih besar
     `;
     return;
   }
 
   resultBox.style.display = "block";
   resultBox.innerHTML = `
-    <b>📊 Result</b><br><br>
-    Balance: $${balance}<br>
-    Risk: ${riskPct}% → $${riskAmount.toFixed(2)}<br>
-    Total Risk Distance: ${totalPips} pips<br><br>
-    <b>Recommended Lot Size:</b><br>
-    Raw: ${rawLot.toFixed(3)} lot<br>
-    Final (Rounded Down): <b>${finalLot.toFixed(2)} lot</b>
+    <b>📊 Ringkasan Kiraan</b><br><br>
+
+    💰 Baki Akaun: <b>$${balance}</b><br>
+    ⚠️ Risiko: <b>${riskPct}%</b> → $${riskAmount.toFixed(2)}<br><br>
+
+    📉 Jarak Risiko:<br>
+    • Zon: ${zone} pips<br>
+    • Spread: ${spread} pips<br>
+    • <b>Total: ${totalPips} pips</b><br><br>
+
+    📐 Saiz Lot Dicadangkan:<br>
+    • Kiraan asal: ${rawLot.toFixed(3)} lot<br>
+    • <b>Lot akhir (dibundarkan): ${finalLot.toFixed(2)} lot</b>
   `;
 
-  // SEND RESULT BACK TO BOT
   if (window.Telegram && Telegram.WebApp) {
     Telegram.WebApp.sendData(JSON.stringify({
       action: "lot_calc_result",
@@ -188,13 +215,8 @@ function calculate() {
     }));
   }
 }
-
-// cache elements
-const balanceEl = document.getElementById("balance");
-const riskEl = document.getElementById("risk");
-const zoneEl = document.getElementById("zone");
-const spreadEl = document.getElementById("spread");
 </script>
 
 </body>
 </html>
+
