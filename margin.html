@@ -15,19 +15,10 @@
       padding: 16px;
     }
 
-    h2 {
-      margin-bottom: 6px;
-    }
+    h2 { margin-bottom: 6px; }
+    p  { font-size: 13px; color: #aaa; }
 
-    p {
-      font-size: 13px;
-      color: #aaa;
-      margin-top: 0;
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
+    .field { margin-bottom: 14px; }
 
     label {
       font-size: 13px;
@@ -69,10 +60,7 @@
 <body>
 
   <h2>📊 Margin Calculator (XAUUSD)</h2>
-  <p>
-    Mengira keperluan modal minimum untuk membuka posisi.
-    Fokus khas untuk XAUUSD sahaja.
-  </p>
+  <p>Menentukan keperluan modal minimum untuk membuka posisi.</p>
 
   <div class="field">
     <label>Lot Size</label>
@@ -99,72 +87,53 @@
     <input id="stopout" type="number" placeholder="Default: 50">
   </div>
 
-  <button onclick="calculateMargin()">Kira Margin</button>
+  <button onclick="calculate()">Kira Margin</button>
 
   <div class="note">
-    *Jika tidak pasti stop out level, rujuk broker yang digunakan.
-    Kebanyakan broker menetapkan sekitar 30%.*
+    *Jika tidak pasti stop out level, kebanyakan broker menggunakan sekitar 50%.*
   </div>
 
-<script>
-const tg = window.Telegram.WebApp;
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready(); // 🔥 INI YANG HILANG SEBELUM NI
 
-function calculateMargin() {
+    function calculate() {
+      const lot = parseFloat(document.getElementById("lot").value);
+      const zone = parseFloat(document.getElementById("zone").value);
+      const price = parseFloat(document.getElementById("price").value);
+      const leverage = parseFloat(document.getElementById("leverage").value);
+      const stopout = parseFloat(document.getElementById("stopout").value) || 50;
 
-  const lot = Number(document.getElementById("lot").value);
-  const zone = Number(document.getElementById("zone").value);
-  const price = Number(document.getElementById("price").value);
-  const leverage = Number(document.getElementById("leverage").value);
-  const stopout = Number(document.getElementById("stopout").value) || 50;
+      if (!lot || !zone || !price || !leverage) {
+        alert("Sila lengkapkan semua maklumat.");
+        return;
+      }
 
-  if (!lot || !zone || !price || !leverage) {
-    alert("Sila lengkapkan semua maklumat.");
-    return;
-  }
+      const contractSize = 100;
 
-  /*
-    XAUUSD RULE (fixed):
-    - 10 pips ≈ $1 untuk 0.01 lot
-    - 1 pip  ≈ $0.10 untuk 0.01 lot
-    - 1 pip  ≈ $10   untuk 1.00 lot
-  */
+      const margin = (price * contractSize * lot) / leverage;
+      const floatingLoss = (zone / 10) * (lot / 0.01);
+      const stopOutEquity = margin * (stopout / 100);
 
-  const pipValuePerLot = 10; // $ per pip untuk 1.00 lot
+      const risk50 = margin + floatingLoss;
+      const risk10 = margin + (floatingLoss * 5);
 
-  const floatingLoss =
-    zone * pipValuePerLot * lot;
+      tg.sendData(JSON.stringify({
+        action: "margin_calc_result",
+        lot: lot.toFixed(2),
+        zone: zone,
+        price: price,
+        leverage: leverage,
+        stopout: stopout,
+        margin: margin.toFixed(2),
+        stopOutEquity: stopOutEquity.toFixed(2),
+        risk50: risk50.toFixed(2),
+        risk10: risk10.toFixed(2)
+      }));
 
-  const margin =
-    (price * 100 * lot) / leverage;
-
-  const stopOutEquity =
-    margin * (stopout / 100);
-
-  const risk50 =
-    margin + floatingLoss;
-
-  const risk10 =
-    margin + (floatingLoss * 5);
-
-  tg.sendData(JSON.stringify({
-    action: "margin_calc_result",
-
-    lot: lot.toFixed(2),
-    zone: zone,
-    price: price,
-    leverage: leverage,
-    stopout: stopout,
-
-    margin: margin.toFixed(2),
-    floating: floatingLoss.toFixed(2),
-    stopOutEquity: stopOutEquity.toFixed(2),
-    risk50: risk50.toFixed(2),
-    risk10: risk10.toFixed(2)
-  }));
-
-  tg.close();
-}
-</script>
+      tg.close();
+    }
+  </script>
 
 </body>
 </html>
