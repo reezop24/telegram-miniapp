@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <title>Langganan VIP RM280</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Telegram Mini App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: white;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 12px;
+    }
+
+    .note {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h2>💎 Langganan VIP RM280</h2>
+    <p>
+      Akses penuh semua video pendidikan premium selama <b>365 hari</b>.<br>
+      Pembaharuan percuma tertakluk kepada terma.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>📌 Kaedah Pembayaran</h3>
+
+    <button class="btn-secondary" onclick="showQR('maybank')">
+      📷 Papar QR Maybank2u
+    </button>
+
+    <button class="btn-secondary" onclick="showQR('tng')">
+      📷 Papar QR Touch ‘n Go
+    </button>
+
+    <div id="qr"></div>
+
+    <p class="note">
+      Sila buat pembayaran dan tekan butang di bawah selepas selesai.
+    </p>
+  </div>
+
+  <div class="card">
+    <button class="btn-primary" onclick="paymentDone()">
+      ✅ Pembayaran Selesai – Kembali ke Telegram
+    </button>
+  </div>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
+  function showQR(type) {
+    const qr = document.getElementById("qr");
+
+    if (type === "maybank") {
+      qr.innerHTML = '<img src="maybank.png" alt="QR Maybank2u">';
+    }
+
+    if (type === "tng") {
+      qr.innerHTML = '<img src="tng.png" alt="QR Touch n Go">';
+    }
+  }
+
+  function paymentDone() {
+    tg.sendData(JSON.stringify({
+      action: "payment_submitted",
+      plan: "RM280_365"
+    }));
+    tg.close();
+  }
+</script>
+
+</body>
+</html>
