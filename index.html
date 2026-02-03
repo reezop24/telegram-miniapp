@@ -66,95 +66,21 @@
       color: #aaa;
       white-space: pre-line;
     }
-
-    .open-btn {
-      background: #22c55e;
-      color: #000;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
   </style>
 </head>
 
 <body>
-  <header id="pageTitle">Reezo Education</header>
 
+<header id="pageTitle">Reezo Education</header>
 
-  <div class="tabs">
-    <div class="tab active" data-level="basic">Basic</div>
-    <div class="tab" data-level="intermediate">Medium</div>
-    <div class="tab" data-level="advanced">Advance</div>
-    <div class="tab" data-level="calculator">📊 Risk Calculator</div>
-  </div>
-
-  <div class="list" id="videoList"></div>
-  <div class="list" id="calculatorList" style="display:none;">
-  <div class="card">
-    <h3>📐 Lot Calculator</h3>
-    <p>
-Kira saiz lot selamat berdasarkan:
-• baki akaun
-• risiko (%)
-• saiz zon (pip)
-
-Direka khas untuk XAUUSD sahaja.
-    </p>
-    <button class="open-btn" onclick="openLotCalculator()">
-      Open
-    </button>
-  </div>
-
-  <div class="card">
-  <h3>📊 Margin Calculator</h3>
-  <p>
-Kira keperluan modal minimum untuk membuka posisi
-berdasarkan lot, zon dan leverage.
-
-Fokus XAUUSD sahaja.
-  </p>
-  <button class="open-btn" onclick="openMarginCalculator()">
-    Open
-  </button>
+<div class="tabs">
+  <div class="tab active" data-level="basic">Basic</div>
+  <div class="tab" data-level="intermediate">Medium</div>
+  <div class="tab" data-level="advanced">Advance</div>
 </div>
 
+<div class="list" id="videoList"></div>
 
-<script>
-function openLotCalculator() {
-  window.location.href = "lot.html";
-}
-
-function openMarginCalculator() {
-  window.location.href = "risk.html";
-}
-</script>
-
-
-
-  <script>
-  function getQueryParam(name) {
-    return new URLSearchParams(window.location.search).get(name);
-  }
-
-  const tabParam = getQueryParam("tab");
-
-  if (tabParam === "calculator") {
-    // hide video UI
-    document.querySelector(".tabs").style.display = "none";
-    document.getElementById("videoList").style.display = "none";
-
-    // show calculator hub
-    document.getElementById("calculatorList").style.display = "block";
-
-    // change header title
-    document.getElementById("pageTitle").innerText = "📊 Risk Calculator";
-  }
-</script>
-
-
-  
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
