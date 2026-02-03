@@ -87,10 +87,39 @@
     <div class="tab active" data-level="basic">Basic</div>
     <div class="tab" data-level="intermediate">Medium</div>
     <div class="tab" data-level="advanced">Advance</div>
+    <div class="tab" data-level="calculator">🧮 Calculator</div>
   </div>
 
   <div class="list" id="videoList"></div>
+  <div class="list" id="calculatorList" style="display:none;">
+  <div class="card">
+    <h3>📐 Lot Calculator</h3>
+    <p>
+Kira saiz lot selamat berdasarkan:
+• baki akaun
+• risiko (%)
+• saiz zon (pip)
 
+Direka khas untuk XAUUSD sahaja.
+    </p>
+    <button class="open-btn" onclick="openLotCalculator()">
+      Open
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>🔒 Margin Calculator</h3>
+    <p>Coming soon (VIP only)</p>
+  </div>
+</div>
+
+<script>
+function openLotCalculator() {
+  window.location.href = "lot.html";
+}
+</script>
+
+  
   <script src="app.js"></script>
 </body>
 </html>
