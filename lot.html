@@ -5,6 +5,9 @@
   <title>XAUUSD Risk Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Telegram WebApp -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,7 +32,6 @@
       background: #020617;
       border-radius: 12px;
       padding: 16px;
-      margin-bottom: 16px;
     }
 
     label {
@@ -75,12 +77,6 @@
       display: none;
       font-size: 14px;
       line-height: 1.5;
-    }
-
-    .warn {
-      color: #fca5a5;
-      font-size: 13px;
-      margin-top: 10px;
     }
 
     .note {
@@ -131,22 +127,22 @@
 
 <script>
 function calculate() {
-  const balance = parseFloat(document.getElementById("balance").value);
-  const riskPct = parseFloat(document.getElementById("risk").value);
-  const zone = parseFloat(document.getElementById("zone").value);
-  const spread = parseFloat(document.getElementById("spread").value);
+  const balance = parseFloat(balanceEl.value);
+  const riskPct = parseFloat(riskEl.value);
+  const zone = parseFloat(zoneEl.value);
+  const spread = parseFloat(spreadEl.value);
 
   const resultBox = document.getElementById("result");
 
   if (!balance || !riskPct || !zone || spread < 0) {
     resultBox.style.display = "block";
-    resultBox.innerHTML = "⚠️ Sila lengkapkan semua maklumat sebelum kiraan dibuat.";
+    resultBox.innerHTML =
+      "⚠️ Sila lengkapkan semua maklumat sebelum kiraan dibuat.";
     return;
   }
 
   const riskAmount = balance * (riskPct / 100);
   const totalPips = zone + spread;
-
   const rawLot = riskAmount / (totalPips * 10);
   const finalLot = Math.floor(rawLot * 100) / 100;
 
@@ -175,7 +171,29 @@ function calculate() {
     Raw: ${rawLot.toFixed(3)} lot<br>
     Final (Rounded Down): <b>${finalLot.toFixed(2)} lot</b>
   `;
+
+  // SEND RESULT BACK TO BOT
+  if (window.Telegram && Telegram.WebApp) {
+    Telegram.WebApp.sendData(JSON.stringify({
+      action: "lot_calc_result",
+      symbol: "XAUUSD",
+      balance,
+      riskPct,
+      zone,
+      spread,
+      riskAmount: Number(riskAmount.toFixed(2)),
+      totalPips,
+      rawLot: Number(rawLot.toFixed(3)),
+      finalLot: Number(finalLot.toFixed(2))
+    }));
+  }
 }
+
+// cache elements
+const balanceEl = document.getElementById("balance");
+const riskEl = document.getElementById("risk");
+const zoneEl = document.getElementById("zone");
+const spreadEl = document.getElementById("spread");
 </script>
 
 </body>
