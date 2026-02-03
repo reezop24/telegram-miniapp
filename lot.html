@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>XAUUSD Risk Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .info {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #dc2626;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      background: #020617;
+      padding: 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .warn {
+      color: #fca5a5;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🧮 XAUUSD Risk Calculator</h1>
+  <div class="subtitle">
+    Kira saiz lot selamat berdasarkan baki, risiko dan zon setup anda.
+  </div>
+
+  <div class="card">
+    <div class="info">
+      Semua kiraan menggunakan pip.<br>
+      0.01 = 1 pip • 4500 → 4501 = 10 pips
+    </div>
+
+    <label>Account Balance ($)</label>
+    <input id="balance" type="number" placeholder="Contoh: 1000" />
+
+    <label>Risk Percentage (%)</label>
+    <input id="risk" type="number" step="0.01" placeholder="Contoh: 2" />
+    <div class="info">Kebiasaannya 1% – 3%</div>
+
+    <label>Stop Loss / Zone Size (Pips)</label>
+    <input id="zone" type="number" placeholder="Contoh: 30" />
+    <div class="info">Jarak entry ke stop loss berdasarkan zon setup</div>
+
+    <label>Current Spread (Pips)</label>
+    <input id="spread" type="number" placeholder="Contoh: 2" />
+    <div class="info">Rujuk MT5 (20 points = 2 pips)</div>
+
+    <button onclick="calculate()">🔍 Kira Lot Size</button>
+
+    <div id="result" class="result"></div>
+
+    <div class="note">
+      Lot dibundarkan ke nilai lebih kecil bagi memastikan risiko sebenar
+      tidak melebihi perancangan asal.
+    </div>
+  </div>
+
+<script>
+function calculate() {
+  const balance = parseFloat(document.getElementById("balance").value);
+  const riskPct = parseFloat(document.getElementById("risk").value);
+  const zone = parseFloat(document.getElementById("zone").value);
+  const spread = parseFloat(document.getElementById("spread").value);
+
+  const resultBox = document.getElementById("result");
+
+  if (!balance || !riskPct || !zone || spread < 0) {
+    resultBox.style.display = "block";
+    resultBox.innerHTML = "⚠️ Sila lengkapkan semua maklumat sebelum kiraan dibuat.";
+    return;
+  }
+
+  const riskAmount = balance * (riskPct / 100);
+  const totalPips = zone + spread;
+
+  const rawLot = riskAmount / (totalPips * 10);
+  const finalLot = Math.floor(rawLot * 100) / 100;
+
+  if (finalLot <= 0) {
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+      ⚠️ <b>Lot Tidak Mencukupi</b><br><br>
+      Berdasarkan baki, risiko dan saiz zon yang anda tetapkan,
+      lot yang selamat untuk setup ini adalah
+      lebih kecil daripada minimum lot yang dibenarkan.<br><br>
+      <b>Cadangan:</b><br>
+      • Kecilkan saiz zon<br>
+      • ATAU tingkatkan risiko %<br>
+      • ATAU gunakan baki yang lebih besar
+    `;
+    return;
+  }
+
+  resultBox.style.display = "block";
+  resultBox.innerHTML = `
+    <b>📊 Result</b><br><br>
+    Balance: $${balance}<br>
+    Risk: ${riskPct}% → $${riskAmount.toFixed(2)}<br>
+    Total Risk Distance: ${totalPips} pips<br><br>
+    <b>Recommended Lot Size:</b><br>
+    Raw: ${rawLot.toFixed(3)} lot<br>
+    Final (Rounded Down): <b>${finalLot.toFixed(2)} lot</b>
+  `;
+}
+</script>
+
+</body>
+</html>
