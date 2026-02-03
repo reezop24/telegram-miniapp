@@ -108,16 +108,29 @@ Direka khas untuk XAUUSD sahaja.
   </div>
 
   <div class="card">
-    <h3>🔒 Margin Calculator</h3>
-    <p>Coming soon (VIP only)</p>
-  </div>
+  <h3>📊 Margin Calculator</h3>
+  <p>
+Kira keperluan modal minimum untuk membuka posisi
+berdasarkan lot, zon dan leverage.
+
+Fokus XAUUSD sahaja.
+  </p>
+  <button class="open-btn" onclick="openMarginCalculator()">
+    Open
+  </button>
 </div>
+
 
 <script>
 function openLotCalculator() {
   window.location.href = "lot.html";
 }
+
+function openMarginCalculator() {
+  window.location.href = "risk.html";
+}
 </script>
+
   <script>
   function getQueryParam(name) {
     return new URLSearchParams(window.location.search).get(name);
