@@ -118,6 +118,26 @@ function openLotCalculator() {
   window.location.href = "lot.html";
 }
 </script>
+  <script>
+  function getQueryParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  const tabParam = getQueryParam("tab");
+
+  if (tabParam === "calculator") {
+    // hide video UI
+    document.querySelector(".tabs").style.display = "none";
+    document.getElementById("videoList").style.display = "none";
+
+    // show calculator hub
+    document.getElementById("calculatorList").style.display = "block";
+
+    // change header title
+    document.getElementById("pageTitle").innerText = "📊 Risk Calculator";
+  }
+</script>
+
 
   
   <script src="app.js"></script>
