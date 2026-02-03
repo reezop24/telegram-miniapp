@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <title>AMarkets – Pendaftaran & IB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #16a34a;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: white;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+    }
+
+    .note {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h2>📈 AMarkets</h2>
+    <p>
+      Pendaftaran akaun, pengesahan client sedia ada dan penukaran IB.<br>
+      Sila pilih kategori yang berkaitan di bawah.
+    </p>
+  </div>
+
+  <!-- MENU UTAMA -->
+  <div class="card" id="mainMenu">
+    <button class="btn-primary" onclick="openSignup()">
+      🆕 Pendaftaran Baru
+    </button>
+
+    <button class="btn-secondary" onclick="showClientMenu()">
+      👤 Pelanggan AMarkets
+    </button>
+  </div>
+
+  <!-- SUB MENU: PELANGGAN -->
+  <div class="card" id="clientMenu" style="display:none;">
+    <button class="btn-primary" onclick="showClientReezo()">
+      🔹 Client Reezo
+    </button>
+
+    <button class="btn-secondary" onclick="showSwitchIB()">
+      🔁 Penukaran IB
+    </button>
+
+    <button class="btn-secondary" onclick="backToMain()">
+      ⬅ Kembali
+    </button>
+  </div>
+
+  <!-- CLIENT REEZO -->
+  <div class="card" id="clientReezo" style="display:none;">
+    <h3>🔹 Client Reezo</h3>
+
+    <input type="text" id="wallet" placeholder="Wallet / Account ID" />
+    <input type="text" id="proof" placeholder="Bukti deposit (link / note)" />
+
+    <button class="btn-primary" onclick="submitClientReezo()">
+      📩 Hantar Maklumat
+    </button>
+
+    <button class="btn-secondary" onclick="backToClientMenu()">
+      ⬅ Kembali
+    </button>
+  </div>
+
+  <!-- SWITCH IB -->
+  <div class="card" id="switchIB" style="display:none;">
+    <h3>🔁 Penukaran IB</h3>
+    <p class="note">
+      Arahan penukaran IB akan dipaparkan di sini.<br>
+      (Akan dikemaskini kemudian)
+    </p>
+
+    <button class="btn-secondary" onclick="backToClientMenu()">
+      ⬅ Kembali
+    </button>
+  </div>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
+  function openSignup() {
+    window.open(
+      "https://amarketstrading.co/sign-up/real-en/?g=REEZO24",
+      "_blank"
+    );
+  }
+
+  function showClientMenu() {
+    hideAll();
+    document.getElementById("clientMenu").style.display = "block";
+  }
+
+  function showClientReezo() {
+    hideAll();
+    document.getElementById("clientReezo").style.display = "block";
+  }
+
+  function showSwitchIB() {
+    hideAll();
+    document.getElementById("switchIB").style.display = "block";
+  }
+
+  function backToMain() {
+    hideAll();
+    document.getElementById("mainMenu").style.display = "block";
+  }
+
+  function backToClientMenu() {
+    hideAll();
+    document.getElementById("clientMenu").style.display = "block";
+  }
+
+  function hideAll() {
+    document.getElementById("mainMenu").style.display = "none";
+    document.getElementById("clientMenu").style.display = "none";
+    document.getElementById("clientReezo").style.display = "none";
+    document.getElementById("switchIB").style.display = "none";
+  }
+
+  function submitClientReezo() {
+    const wallet = document.getElementById("wallet").value;
+    const proof = document.getElementById("proof").value;
+
+    tg.sendData(JSON.stringify({
+      action: "amarkets_client_reezo",
+      wallet: wallet,
+      proof: proof
+    }));
+
+    tg.close();
+  }
+</script>
+
+</body>
+</html>
