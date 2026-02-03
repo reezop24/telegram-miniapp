@@ -15,25 +15,11 @@
       padding: 16px;
     }
 
-    h2 {
-      margin-bottom: 6px;
-    }
+    h2 { margin-bottom: 6px; }
+    p { font-size: 13px; color: #aaa; margin-top: 0; }
 
-    p {
-      font-size: 13px;
-      color: #aaa;
-      margin-top: 0;
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    label {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 4px;
-    }
+    .field { margin-bottom: 14px; }
+    label { font-size: 13px; display: block; margin-bottom: 4px; }
 
     input {
       width: 100%;
@@ -68,90 +54,96 @@
 
 <body>
 
-  <h2>📊 Margin Calculator (XAUUSD)</h2>
-  <p>Menentukan keperluan modal minimum untuk membuka posisi.</p>
+<h2>📊 Margin Calculator (XAUUSD)</h2>
+<p>Anggaran modal minimum untuk membuka posisi.</p>
 
-  <div class="field">
-    <label>Lot Size</label>
-    <input id="lot" type="number" step="0.01" placeholder="Contoh: 0.10">
-  </div>
+<div class="field">
+  <label>Lot Size</label>
+  <input id="lot" type="number" step="0.01" placeholder="Contoh: 0.10">
+</div>
 
-  <div class="field">
-    <label>Saiz Zon / Floating Maksimum (pips)</label>
-    <input id="zone" type="number" placeholder="Contoh: 100">
-  </div>
+<div class="field">
+  <label>Saiz Zon / Floating Maksimum (pips)</label>
+  <input id="zone" type="number" placeholder="Contoh: 100">
+</div>
 
-  <div class="field">
-    <label>Harga Semasa XAUUSD</label>
-    <input id="price" type="number" placeholder="Contoh: 4500">
-  </div>
+<div class="field">
+  <label>Harga Semasa XAUUSD</label>
+  <input id="price" type="number" placeholder="Contoh: 4500">
+</div>
 
-  <div class="field">
-    <label>Leverage Akaun (contoh: 200 untuk 1:200)</label>
-    <input id="leverage" type="number" placeholder="Contoh: 200">
-  </div>
+<div class="field">
+  <label>Leverage Akaun (contoh: 200 untuk 1:200)</label>
+  <input id="leverage" type="number" placeholder="Contoh: 200">
+</div>
 
-  <div class="field">
-    <label>Stop Out Level Broker (%)</label>
-    <input id="stopout" type="number" placeholder="Default: 50">
-  </div>
+<div class="field">
+  <label>Stop Out Level Broker (%)</label>
+  <input id="stopout" type="number" placeholder="Default: 50">
+</div>
 
-  <button onclick="calculate()">Kira Margin</button>
+<button onclick="calculate()">Kira Margin</button>
 
-  <div class="note">
-    *Jika tidak pasti stop out level, kebanyakan broker menggunakan sekitar 50%.*
-  </div>
+<div class="note">
+*Jika tidak pasti stop out level, kebanyakan broker menggunakan sekitar 50%.*
+</div>
 
-  <script>
-    const tg = window.Telegram.WebApp;
+<script>
+const tg = window.Telegram.WebApp;
 
-    function calculate() {
-      const lot = parseFloat(document.getElementById("lot").value);
-      const zone = parseFloat(document.getElementById("zone").value);
-      const price = parseFloat(document.getElementById("price").value);
-      const leverage = parseFloat(document.getElementById("leverage").value);
-      const stopout = parseFloat(document.getElementById("stopout").value) || 50;
+function calculate() {
 
-      if (!lot || !zone || !price || !leverage) {
-        alert("Sila lengkapkan semua maklumat.");
-        return;
-      }
+  const lot = Number(document.getElementById("lot").value);
+  const zone = Number(document.getElementById("zone").value);
+  const price = Number(document.getElementById("price").value);
+  const leverage = Number(document.getElementById("leverage").value);
+  const stopout = Number(document.getElementById("stopout").value) || 50;
 
-      // === CALCULATION (XAUUSD) ===
-      const contractSize = 100;
+  if (!lot || !zone || !price || !leverage) {
+    alert("Sila lengkapkan semua maklumat.");
+    return;
+  }
 
-      const margin =
-        (price * contractSize * lot) / leverage;
+  // =============================
+  // XAUUSD RULE (FIXED)
+  // 10 pips = $1 per 0.01 lot
+  // =============================
+  const pipValuePerLot = 100; // $ per pip per 1.00 lot
 
-      const floatingLoss =
-        (zone / 10) * (lot / 0.01);
+  const floatingLoss =
+    zone * pipValuePerLot * lot;
 
-      const stopOutEquity =
-        margin * (stopout / 100);
+  const margin =
+    (price * 100 * lot) / leverage;
 
-      const minRisk50 =
-        margin + floatingLoss;
+  const stopOutEquity =
+    margin * (stopout / 100);
 
-      const minRisk10 =
-        margin + (floatingLoss * 5);
+  const risk50 =
+    margin + floatingLoss;
 
-      tg.sendData(JSON.stringify({
-        action: "margin_calc_result",
-        lot: lot.toFixed(2),
-        zone: zone,
-        price: price,
-        leverage: leverage,
-        stopout: stopout,
-        margin: margin.toFixed(2),
-        floating: floatingLoss.toFixed(2),
-        stopOutEquity: stopOutEquity.toFixed(2),
-        risk50: minRisk50.toFixed(2),
-        risk10: minRisk10.toFixed(2)
-      }));
+  const risk10 =
+    margin + (floatingLoss * 5);
 
-      tg.close();
-    }
-  </script>
+  tg.sendData(JSON.stringify({
+    action: "margin_calc_result",
+
+    lot: lot.toFixed(2),
+    zone: zone,
+    price: price,
+    leverage: leverage,
+    stopout: stopout,
+
+    margin: margin.toFixed(2),
+    floating: floatingLoss.toFixed(2),
+    stopOutEquity: stopOutEquity.toFixed(2),
+    risk50: risk50.toFixed(2),
+    risk10: risk10.toFixed(2)
+  }));
+
+  tg.close();
+}
+</script>
 
 </body>
 </html>
