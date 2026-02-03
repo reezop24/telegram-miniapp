@@ -122,14 +122,17 @@ Fokus XAUUSD sahaja.
 
 
 <script>
+const tg = window.Telegram.WebApp;
+
 function openLotCalculator() {
-  window.location.href = "lot.html";
+  tg.openLink("https://telegram-miniapp-v45s.vercel.app/lot.html");
 }
 
 function openMarginCalculator() {
-  window.location.href = "risk.html";
+  tg.openLink("https://telegram-miniapp-v45s.vercel.app/risk.html");
 }
 </script>
+
 
   <script>
   function getQueryParam(name) {
