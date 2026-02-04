@@ -3,12 +3,21 @@ tg.ready();
 
 const params = new URLSearchParams(window.location.search);
 const CURRENT_LEVEL = params.get("level"); // basic | medium | advance
+// === FIX: pastikan level sentiasa ada ===
+let ACTIVE_LEVEL = CURRENT_LEVEL;
+
+if (!ACTIVE_LEVEL) {
+  ACTIVE_LEVEL = "basic"; // default selamat
+  const url = new URL(window.location.href);
+  url.searchParams.set("level", ACTIVE_LEVEL);
+  window.history.replaceState({}, "", url);
+}
+
 const pageTitle = document.getElementById("pageTitle");
 
-if (CURRENT_LEVEL) {
-  pageTitle.innerText =
-    CURRENT_LEVEL.charAt(0).toUpperCase() + CURRENT_LEVEL.slice(1);
-}
+pageTitle.innerText =
+  ACTIVE_LEVEL.charAt(0).toUpperCase() + ACTIVE_LEVEL.slice(1);
+
 if (CURRENT_LEVEL) {
   const tabs = document.querySelector(".tabs");
   if (tabs) tabs.style.display = "none";
@@ -131,9 +140,8 @@ const videoList = document.getElementById("videoList");
 function renderVideos() {
   videoList.innerHTML = "";
 
-  const filteredVideos = CURRENT_LEVEL
-    ? videos.filter(v => v.level === CURRENT_LEVEL)
-    : videos;
+  const filteredVideos = videos.filter(v => v.level === ACTIVE_LEVEL);
+
 
   if (filteredVideos.length === 0) {
     videoList.innerHTML = "<p>Tiada video untuk level ini.</p>";
@@ -159,9 +167,10 @@ function renderVideos() {
 function openVideo(videoId) {
   tg.sendData(JSON.stringify({
     video_id: videoId,
-    level: CURRENT_LEVEL
+    level: ACTIVE_LEVEL
   }));
 }
+
 
 renderVideos();
 
