@@ -185,14 +185,6 @@
   <div class="tab" data-level="advanced">Advance</div>
 </div>
 
-  <script>
-const params = new URLSearchParams(window.location.search);
-
-if (!params.get("level")) {
-  params.set("level", "basic");
-  history.replaceState(null, "", "?" + params.toString());
-}
-</script>
 
 <div class="list" id="videoList"></div>
 
