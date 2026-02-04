@@ -118,7 +118,7 @@
       const risk50 = margin + floatingLoss;
       const risk10 = margin + (floatingLoss * 5);
 
-      tg.sendData(JSON.stringify({
+      Telegram.WebApp.sendData(JSON.stringify({
         action: "margin_calc_result",
         lot: lot.toFixed(2),
         zone: zone,
