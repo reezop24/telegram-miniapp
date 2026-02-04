@@ -91,13 +91,17 @@
 
 <div class="list" id="videoList"></div>
 
-<!-- 🔧 TAB CLICK HANDLER (FIX BUG B) -->
 <script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+
+/* 🔧 TELEGRAM-SAFE TAB HANDLER */
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
     const level = tab.dataset.level;
     if (!level) return;
-    window.location.href = `?level=${level}`;
+
+    tg.openLink(`https://telegram-miniapp-v45s.vercel.app/?level=${level}`);
   });
 });
 </script>
