@@ -166,10 +166,12 @@ function renderVideos() {
 
 function openVideo(videoId) {
   tg.sendData(JSON.stringify({
+    action: "open_video",
     video_id: videoId,
     level: ACTIVE_LEVEL
   }));
 }
+
 
 
 renderVideos();
